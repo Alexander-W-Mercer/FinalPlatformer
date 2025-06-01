@@ -372,7 +372,8 @@ class Platformer extends Phaser.Scene {
             this.WALKTIME++;
         }
 
-        if (this.WALKTIME == 10) {
+        console.log(my.sprite.player.body.velocity.x)
+        if (this.WALKTIME > 10 - (Math.abs(my.sprite.player.body.velocity.x) / 200)) {
             this.walkSound.play();
             this.WALKTIME = 0;
         }
