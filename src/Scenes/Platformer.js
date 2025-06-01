@@ -363,9 +363,12 @@ class Platformer extends Phaser.Scene {
 
         console.log("////////////////////////////////")
         console.log(my.sprite.player)
-        if(!my.sprite.player.body.blocked.down && this.GRAVITYDIRECTION && (my.sprite.player.body.velocity.x != 0)) {
+        console.log(my.sprite.player.body.blocked.down)
+        if(my.sprite.player.body.blocked.up && this.GRAVITYDIRECTION && (my.sprite.player.body.velocity.x != 0)) {
             this.WALKTIME++;
-        } else if (!my.sprite.player.body.blocked.up && !this.GRAVITYDIRECTION && (my.sprite.player.body.velocity.x != 0)) {
+            console.log(this.WALKTIME)
+            console.log("walkinggggggggggggggggggggggggggg")
+        } else if (my.sprite.player.body.blocked.down && !this.GRAVITYDIRECTION && (my.sprite.player.body.velocity.x != 0)) {
             this.WALKTIME++;
         }
 
