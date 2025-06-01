@@ -22,6 +22,7 @@ class Platformer extends Phaser.Scene {
     preload() {
         this.load.scenePlugin('AnimatedTiles', './lib/AnimatedTiles.js', 'animatedTiles', 'animatedTiles');
         this.load.audio('coin', 'assets/coin.wav');
+        this.load.audio('walk', 'assets/walk.wav');
         this.load.audio('hurt', 'assets/hurt.wav');
         this.load.audio('gravitySwap', 'assets/gravitySwap.wav');
         this.load.audio('jump', 'assets/jump.wav');
@@ -29,6 +30,7 @@ class Platformer extends Phaser.Scene {
 
     init() {
         // variables and settings
+        this.WALKTIME = 0;
         this.FROZENX = 0;
         this.FROZENY = 0;
         this.ACCELERATION = 800;
@@ -48,6 +50,7 @@ class Platformer extends Phaser.Scene {
 
     create() {
         this.coinSound = this.sound.add('coin');
+        this.walkSound = this.sound.add('walk');
         this.jumpSound = this.sound.add('jump');
         this.gravitySound = this.sound.add('gravitySwap');
         this.hurtSound = this.sound.add('hurt');
@@ -110,6 +113,9 @@ class Platformer extends Phaser.Scene {
         // Create a Phaser group out of the array this.coins
         // This will be used for collision detection below.
         this.coinGroup = this.add.group(this.coins);
+
+        let oneWayPlatform = (obj1, obj2) => {
+        }
 
         let oneWayCollisionProcess = (obj1, obj2) => {
             //console.log("running")
@@ -354,6 +360,19 @@ class Platformer extends Phaser.Scene {
     }
 
     update() {
+
+        console.log("////////////////////////////////")
+        console.log(my.sprite.player)
+        if(!my.sprite.player.body.blocked.down && this.GRAVITYDIRECTION && (my.sprite.player.body.velocity.x != 0)) {
+            this.WALKTIME++;
+        } else if (!my.sprite.player.body.blocked.up && !this.GRAVITYDIRECTION && (my.sprite.player.body.velocity.x != 0)) {
+            this.WALKTIME++;
+        }
+
+        if (this.WALKTIME == 10) {
+            this.walkSound.play();
+            this.WALKTIME = 0;
+        }
         console.log(my.sprite.player)
         
         if (this.WONGAME) {
@@ -395,6 +414,7 @@ class Platformer extends Phaser.Scene {
             }
             my.sprite.player.setFlip(false, this.GRAVITYDIRECTION);
             my.sprite.player.anims.play('walk', true);
+            //this.walkSound.play();
             // TODO: add particle following code here
 
             my.vfx.walking.startFollow(my.sprite.player, my.sprite.player.displayWidth/2-10, my.sprite.player.displayHeight/2-5 - (60 * this.GRAVITYDIRECTION), false);
@@ -418,6 +438,7 @@ class Platformer extends Phaser.Scene {
             }
             my.sprite.player.setFlip(true, this.GRAVITYDIRECTION);
             my.sprite.player.anims.play('walk', true);
+            //this.walkSound.play();
             // TODO: add particle following code here
 
             my.vfx.walking.startFollow(my.sprite.player, -my.sprite.player.displayWidth/2+10, my.sprite.player.displayHeight/2-5 - (60 * this.GRAVITYDIRECTION), false);
